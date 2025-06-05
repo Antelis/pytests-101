@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  suma:
+    build: ./suma
+    ports:
+      - "8001:8000"
+    networks:
+      - shape-net
+
+  resta:
+    build: ./resta
+    ports:
+      - "8002:8000"
+    networks:
+      - shape-net
+
+  ecuacion:
+    build: ./ecuacion
+    ports:
+      - "8003:8000"
+    networks:
+      - shape-net
+    depends_on:
+      - suma
+      - resta
+      - mysql
+
+  database:
+    build: ./database
+    ports:
+      - "8004:8000"
+    networks:
+      - shape-net
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: equation_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - shape-net
+
+networks:
+  shape-net:
+    driver: bridge
+
+volumes:
+  mysql_data:

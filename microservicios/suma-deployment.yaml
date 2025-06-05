@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: suma
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: suma
+  template:
+    metadata:
+      labels:
+        app: suma
+    spec:
+      containers:
+      - name: suma
+        image: [chocomil]/equation-suma:latest
+        ports:
+        - containerPort: 8000
